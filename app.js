@@ -77,9 +77,9 @@ function renderizarTabla(productos) {
     const stock = Math.floor(parseFloat(String(r['Stock'] || r['cantidad']).replace(',', '.')));
     const stockClass = stock <= 2 ? 'low-stock' : 'in-stock';
 
-    let precioNum = limpiarNumero(r['PRECIO'] || r['precio venta']);
+    let precioNum = limpiarNumero(r['Columna 1'] || r['precio venta']);
     if (isNaN(precioNum)) {
-      precioNum = limpiarNumero(r['Columna 1']);
+      precioNum = limpiarNumero(r['Precio']);
     }
 
     const precioStr = !isNaN(precioNum)
