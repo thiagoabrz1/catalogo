@@ -1,0 +1,300 @@
+:root {
+  --primary: #1e293b;
+  --primary-dark: #0f172a;
+  --accent: #2563eb;
+  --bg: #f8fafc;
+  --card-bg: #ffffff;
+  --border: #e2e8f0;
+  --text: #334155;
+  --text-muted: #64748b;
+  --whatsapp: #25d366;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background-color: var(--bg);
+  color: var(--text);
+  padding: 24px;
+}
+
+.container {
+  max-width: 1150px;
+  margin: 0 auto;
+  background: var(--card-bg);
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+/* Banner del Local */
+.store-banner {
+  background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+  color: #ffffff;
+  padding: 20px 24px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  border-bottom: 1px solid #334155;
+}
+
+.brand-info {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.store-logo {
+  height: 60px;
+  width: auto;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  object-fit: contain;
+  background: #0f172a;
+}
+
+.brand-text h2 {
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.brand-text p {
+  font-size: 0.85rem;
+  color: #cbd5e1;
+  margin-top: 4px;
+}
+
+.sync-badge {
+  background: rgba(34, 197, 94, 0.2);
+  color: #86efac;
+  border: 1px solid rgba(34, 197, 94, 0.4);
+  padding: 5px 12px;
+  border-radius: 9999px;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+/* Header de tabla y buscador */
+.header {
+  background: var(--primary);
+  color: #ffffff;
+  padding: 16px 24px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+
+.header h1 {
+  font-size: 1.15rem;
+  font-weight: 600;
+}
+
+.search-box {
+  padding: 9px 14px;
+  border-radius: 8px;
+  border: 1px solid #475569;
+  background: var(--primary-dark);
+  color: #ffffff;
+  width: 280px;
+  font-size: 0.9rem;
+  outline: none;
+}
+
+.search-box:focus {
+  border-color: #60a5fa;
+}
+
+/* Tabla */
+.table-wrapper {
+  overflow-x: auto;
+  max-height: 72vh;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+thead th {
+  background-color: #f1f5f9;
+  color: var(--primary);
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 14px 16px;
+  border-bottom: 2px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.center-col { text-align: center; }
+.right-col { text-align: right; }
+
+tbody tr {
+  border-bottom: 1px solid var(--border);
+  transition: background-color 0.15s ease;
+}
+
+tbody tr:nth-child(even) {
+  background-color: #f8fafc;
+}
+
+tbody tr:hover {
+  background-color: #eff6ff;
+}
+
+td {
+  padding: 10px 16px;
+  vertical-align: middle;
+  font-size: 0.93rem;
+}
+
+.loading-row {
+  text-align: center;
+  padding: 32px;
+  color: var(--text-muted);
+}
+
+.img-cell {
+  width: 72px;
+  text-align: center;
+}
+
+.product-img {
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
+  background-color: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 3px;
+  display: block;
+  margin: 0 auto;
+  transition: transform 0.2s ease;
+}
+
+.product-img:hover {
+  transform: scale(1.65);
+  z-index: 20;
+  position: relative;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+}
+
+.code-cell {
+  width: 110px;
+  white-space: nowrap;
+}
+
+.code-badge {
+  background-color: #e0e7ff;
+  color: #1d4ed8;
+  font-family: 'Courier New', Courier, monospace;
+  font-weight: 700;
+  font-size: 0.85rem;
+  padding: 4px 8px;
+  border-radius: 6px;
+  display: inline-block;
+}
+
+.name-cell {
+  font-weight: 500;
+  color: var(--primary-dark);
+}
+
+.qty-cell {
+  width: 110px;
+  text-align: center;
+}
+
+.stock-badge {
+  display: inline-block;
+  min-width: 34px;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  font-weight: 600;
+  font-size: 0.82rem;
+  text-align: center;
+}
+
+.in-stock {
+  background-color: #dcfce7;
+  color: #15803d;
+}
+
+.low-stock {
+  background-color: #fef3c7;
+  color: #b45309;
+}
+
+.price-cell {
+  width: 140px;
+  text-align: right;
+  font-weight: 700;
+  color: var(--primary-dark);
+  font-size: 0.98rem;
+  white-space: nowrap;
+}
+
+/* Footer del Local */
+.store-footer {
+  background-color: var(--primary-dark);
+  color: #f8fafc;
+  padding: 18px 24px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  border-top: 1px solid var(--border);
+}
+
+.footer-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.95rem;
+}
+
+.footer-icon {
+  width: 20px;
+  height: 20px;
+  color: #60a5fa;
+  flex-shrink: 0;
+}
+
+.whatsapp-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: var(--whatsapp);
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.92rem;
+  padding: 8px 16px;
+  border-radius: 9999px;
+  transition: transform 0.15s ease, opacity 0.15s ease;
+}
+
+.whatsapp-link:hover {
+  transform: translateY(-1px);
+  opacity: 0.92;
+}
+
+.whatsapp-icon {
+  width: 20px;
+  height: 20px;
+}
