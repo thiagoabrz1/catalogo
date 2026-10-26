@@ -1,66 +1,45 @@
-// PEGÁ AQUÍ EL ENLACE CSV PUBLICADO DE TU GOOGLE SHEETS:
-const GOOGLE_SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRlDtBXDAZkCm1yfEuFr5qoRcNKqO_5Rp6XwfjkFR2lgZYQkQ0UXi21MArfslU8aem-M0ttmd9Lt2ak/pub?gid=1478131743&single=true&output=csv';
+// 1. CONFIGURACIÓN DE SUPABASE (Pegá tus credenciales aquí)
+const SUPABASE_URL = 'https://ivysgmedgkjrlcbrtvmc.supabase.co/';
+const SUPABASE_ANON_KEY = 'sb_publishable_WMPaqbMHwwCsYN6vvlm0zw_6-H-hUj-';
 
-const INTERVALO_ACTUALIZACION_MS = 60000; // Revisa cambios cada 60 segundos
-let ultimoHashDatos = '';
+// Inicializar el cliente de Supabase
+const clienteSupabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 document.addEventListener('DOMContentLoaded', () => {
   const searchInput = document.getElementById('searchInput');
   searchInput.addEventListener('keyup', filtrarTabla);
 
-  cargarDesdeGoogleSheets();
-  setInterval(cargarDesdeGoogleSheets, INTERVALO_ACTUALIZACION_MS);
+  cargarCatalogo();
+  
+  // Refresca la tabla cada 60 segundos por si hiciste ventas o cambiaste precios
+  setInterval(cargarCatalogo, 60000); 
 });
 
-function cargarDesdeGoogleSheets() {
+async function cargarCatalogo() {
   const syncStatus = document.getElementById('syncStatus');
 
-  // Agregamos un parámetro de tiempo para evitar que el navegador guarde una versión vieja en caché
-  const urlSinCache = GOOGLE_SHEET_CSV_URL.includes('?')
-    ? `${GOOGLE_SHEET_CSV_URL}&t=${Date.now()}`
-    : `${GOOGLE_SHEET_CSV_URL}?t=${Date.now()}`;
+  try {
+    // Usamos clienteSupabase en lugar de supabase
+    const { data: productos, error } = await clienteSupabase
+      .from('productos')
+      .select('codigo, nombre, imagen, stock, precio_venta')
+      .gt('stock', 0)
+      .not('imagen', 'is', null)
+      .neq('imagen', '')
+      .order('codigo', { ascending: true });
 
-  Papa.parse(urlSinCache, {
-    download: true,
-    header: true,
-    skipEmptyLines: true,
-    complete: function(results) {
-      const filas = results.data;
+    // ... el resto de tu código queda igual
 
-      // Filtrar únicamente productos con código, con imagen y con stock > 0
-      const validos = filas.filter(r => {
-        const img = (r['Imagen'] || r['IMAGEN 2'] || '').trim();
-        const stockRaw = String(r['Stock'] || r['cantidad'] || '0').replace(',', '.');
-        const stock = parseFloat(stockRaw);
-        const codigo = (r['codigo'] || '').trim();
+    if (error) throw error;
 
-        return codigo !== '' && img.startsWith('http') && !isNaN(stock) && stock > 0;
-      });
+    renderizarTabla(productos);
 
-      const nuevoHash = JSON.stringify(validos);
-      if (nuevoHash !== ultimoHashDatos) {
-        ultimoHashDatos = nuevoHash;
-        renderizarTabla(validos);
-      }
-
-      const hora = new Date().toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' });
-      syncStatus.textContent = `Actualizado: ${hora}`;
-    },
-    error: function(err) {
-      console.error('Error al leer Google Sheets:', err);
-      syncStatus.textContent = 'Error de conexión';
-    }
-  });
-}
-
-function limpiarNumero(valor) {
-  if (valor === undefined || valor === null) return NaN;
-  const limpio = String(valor)
-    .replace(/\$/g, '')
-    .replace(/\s/g, '')
-    .replace(/\./g, '')
-    .replace(',', '.');
-  return parseFloat(limpio);
+    const hora = new Date().toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' });
+    syncStatus.textContent = `Sincronizado: ${hora}`;
+  } catch (err) {
+    console.error('Error al leer Supabase:', err.message);
+    syncStatus.textContent = 'Error de conexión';
+  }
 }
 
 function renderizarTabla(productos) {
@@ -69,33 +48,25 @@ function renderizarTabla(productos) {
 
   titulo.textContent = `Listado de Productos — ${productos.length} Artículos en Stock`;
 
-  tbody.innerHTML = productos.map(r => {
-    const img = (r['Imagen'] || r['IMAGEN 2']).trim();
-    const codigo = r['codigo'].trim();
-    const nombre = escaparHTML((r['Nombre'] || r['descripcion'] || '').trim());
-
-    const stock = Math.floor(parseFloat(String(r['Stock'] || r['cantidad']).replace(',', '.')));
-    const stockClass = stock <= 2 ? 'low-stock' : 'in-stock';
-
-    let precioNum = limpiarNumero(r['Columna 1'] || r['precio venta']);
-    if (isNaN(precioNum)) {
-      precioNum = limpiarNumero(r['Precio']);
-    }
-
-    const precioStr = !isNaN(precioNum)
-      ? '$' + Math.round(precioNum).toLocaleString('es-AR')
+  tbody.innerHTML = productos.map(producto => {
+    const stockClass = producto.stock <= 2 ? 'low-stock' : 'in-stock';
+    
+    // Formatear precio
+    const precioStr = (producto.precio_venta && producto.precio_venta > 0)
+      ? '$' + Math.round(producto.precio_venta).toLocaleString('es-AR')
       : 'Consultar';
 
     return `
       <tr>
-        <td><img src="${img}" alt="${nombre}" class="product-img" loading="lazy"></td>
-        <td class="code-cell"><span class="code-badge">${codigo}</span></td>
-        <td class="name-cell">${nombre}</td>
-        <td class="qty-cell"><span class="stock-badge ${stockClass}">${stock}</span></td>
+        <td><img src="${producto.imagen}" alt="${escaparHTML(producto.nombre)}" class="product-img" loading="lazy"></td>
+        <td class="code-cell"><span class="code-badge">${producto.codigo}</span></td>
+        <td class="name-cell">${escaparHTML(producto.nombre)}</td>
+        <td class="qty-cell"><span class="stock-badge ${stockClass}">${producto.stock}</span></td>
         <td class="price-cell">${precioStr}</td>
       </tr>`;
   }).join('');
 
+  // Mantener el filtro aplicado si el usuario estaba escribiendo
   filtrarTabla();
 }
 
@@ -114,7 +85,8 @@ function filtrarTabla() {
 }
 
 function escaparHTML(texto) {
-  return texto
+  if (!texto) return '';
+  return String(texto)
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')

@@ -5,32 +5,28 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Catálogo de Productos</title>
   <link rel="stylesheet" href="styles.css">
-  <!-- Librería PapaParse para leer el CSV de Google Sheets de forma rápida y segura -->
-  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+  <!-- Librería oficial de Supabase para leer la base de datos -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
   <div class="container">
-    <!-- Banner con el Logo del Local -->
     <header class="store-banner">
       <div class="brand-info">
-        <!-- Reemplazá el src por la ruta a tu logo en el repositorio (ej. "img/logo.png") -->
         <img src="logo.png" alt="Logo del Local" class="store-logo">
         <div class="brand-text">
-          <h2>Catálogo de Productos</h2>
+          <h2>Catálogo Oficial de Productos</h2>
           <p>Stock y precios sincronizados en tiempo real</p>
         </div>
       </div>
-      <div class="sync-badge" id="syncStatus">Cargando catálogo...</div>
+      <div class="sync-badge" id="syncStatus">Conectando a la base de datos...</div>
     </header>
 
-    <!-- Barra de título y buscador -->
     <div class="header">
       <h1 id="tituloCatalogo">Listado de Productos</h1>
-      <input type="text" id="searchInput" class="search-box" placeholder="Buscar por nombre...">
+      <input type="text" id="searchInput" class="search-box" placeholder="Buscar por nombre o código...">
     </div>
 
-    <!-- Tabla de productos -->
     <div class="table-wrapper">
       <table id="productosTable">
         <thead>
@@ -44,13 +40,12 @@
         </thead>
         <tbody id="tablaBody">
           <tr>
-            <td colspan="5" class="loading-row">Cargando productos desde Google Sheets...</td>
+            <td colspan="5" class="loading-row">Cargando productos...</td>
           </tr>
         </tbody>
       </table>
     </div>
 
-    <!-- Footer con Dirección y WhatsApp -->
     <footer class="store-footer">
       <div class="footer-item">
         <svg class="footer-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -59,7 +54,6 @@
         </svg>
         <span><strong>Dirección:</strong> Av. Mitre 2760, Sarandí</span>
       </div>
-
       <a href="https://wa.me/5491150477145" target="_blank" rel="noopener noreferrer" class="whatsapp-link">
         <svg class="whatsapp-icon" viewBox="0 0 32 32" fill="currentColor">
           <path d="M16.004 3.2c-7.072 0-12.8 5.728-12.8 12.8 0 2.256.592 4.464 1.712 6.416L3.2 28.8l6.56-1.712a12.74 12.74 0 0 0 6.244 1.616h.004c7.068 0 12.792-5.728 12.792-12.8 0-3.42-1.332-6.636-3.748-9.056A12.716 12.716 0 0 0 16.004 3.2zm0 23.36h-.004a10.61 10.61 0 0 1-5.408-1.48l-.388-.232-3.892 1.016 1.04-3.792-.252-.404a10.576 10.576 0 0 1-1.628-5.668c0-5.868 4.776-10.64 10.644-10.64 2.844 0 5.516 1.108 7.524 3.12a10.574 10.574 0 0 1 3.116 7.524c0 5.868-4.784 10.64-10.648 10.64zm5.836-7.968c-.32-.16-1.892-.932-2.184-1.04-.292-.108-.508-.16-.72.16-.212.32-.828 1.04-1.012 1.252-.188.212-.372.24-.692.08-.32-.16-1.352-.496-2.576-1.588-.952-.848-1.596-1.896-1.78-2.216-.188-.32-.02-.492.14-.652.144-.144.32-.372.48-.56.16-.188.212-.32.32-.532.108-.212.052-.4-.028-.56-.08-.16-.72-1.732-.988-2.372-.26-.624-.524-.54-.72-.548l-.612-.012c-.212 0-.56.08-.852.4-.292.32-1.12 1.092-1.12 2.664s1.148 3.092 1.308 3.304c.16.212 2.256 3.444 5.468 4.828.764.328 1.36.524 1.824.672.768.244 1.464.208 2.016.128.616-.092 1.892-.772 2.16-1.52.268-.748.268-1.388.188-1.52-.08-.132-.292-.212-.612-.372z"/>
